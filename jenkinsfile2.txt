@@ -51,12 +51,14 @@ pipeline {
    }
   }
   stage('stage3'){
-   echo "hello ${params.PERSON}"
-   echo "Biography : ${params.BIOGRAPHY}"
-   echo "Toogle ${params.TOOGLE}"
-   echo "Choice ${params.CHOICE}"
-   echo "Password ${params.PASSWORD}"
-  }
+   steps{
+    echo "hello ${params.PERSON}"
+    echo "Biography : ${params.BIOGRAPHY}"
+    echo "Toogle ${params.TOOGLE}"
+    echo "Choice ${params.CHOICE}"
+    echo "Password ${params.PASSWORD}"
+   }
+  } 
   stage('stage4'){
    message "should we continue ?"
    ok "yes, we can"
