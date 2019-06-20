@@ -1,10 +1,29 @@
 pipeline{
  agent any
+ options{
+  timestamp()
+ }
+ parameters{
+  string(name:'PERSON',defaultValue:'Amit',description:'Name of the persion')
+  text(name:'BIOGRAPHY',defaultValue:'he is a great guy and stuff',description:'about the person')
+  booleanparam(name:'TOOGLE',defaultValue:true,description:'toogle this value')
+  choice(name:'CHOICE',choices:['one','two','three','four'],description:'pick something')
+  password(name:'PASSWORD',defaultValue:'SECRET',description:'enter a password')
+  file(name:'FILE',description:"choose a file")
+ }
  stages{
   stage('example'){
    steps{
     echo 'stage1 step1'
    }
   }
+  stage('stage3'){
+   echo "hello ${params.PERSON}"
+   echo "Biography : ${params.BIOGRAPHY}"
+   echo "Toogle ${params.TOOGLE}"
+   echo "Choice ${params.CHOICE}"
+   echo "Password ${params.PASSWORD}"
+  }
+  
  }
 }
