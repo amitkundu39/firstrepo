@@ -1,0 +1,165 @@
+pipeline {
+ agent {
+  dockerfile {
+   filename 'Dockerfile.build'
+   dir 'dockerfiles'
+   label 'my-new-dockerfile'
+  }
+ }
+ triggers{
+  cron('H */4 * * 1-5')
+ }
+ tools{
+  maven 'apache-maven-3.0.1'
+ }
+ options{
+  timeout(time:1,unit:'HOURS')
+  checkoutToSubdirectory('newdir')
+  retry(2)
+  timestamp()
+ }
+ parameters{
+  string(name:'PERSON',defaultValue:'Amit',description:'Name of the persion')
+  text(name:'BIOGRAPHY',defaultValue:'he is a great guy and stuff',description:'about the person')
+  booleanparam(name:'TOOGLE',defaultValue:true,description:'toogle this value')
+  choice(name:'CHOICE',choices:['one','two','three','four'],description:'pick something')
+  password(name:'PASSWORD',defaultValue:'SECRET',description:'enter a password')
+  file(name:'FILE',description:"choose a file")
+ }
+ environment {
+  cc='clang'
+ }
+ stages {
+  stage ('stage1'){
+   environment {
+    SERVICE_CRED=('my-predefined-username-password')
+   }
+   steps {
+    sh 'echo "service user is $SERVICE_CRED_USR"'
+    sh 'echo "service password is $SERVICE_CRED_PWD"'
+    sh 'curl -u $SERVICE_CRED_USR https://myserviceurl.com'
+   }
+  }
+  stage('stage2'){
+   environment{
+    SSH_CREDS=credentials('defined-username-password')
+   }
+   steps{
+   sh 'echo "SSH private key is located at $SSH_CREDS"'
+   sh 'echo "SSH private key user is $SSH_CREDS_USR"'
+   sh 'echo "SSH passphrase is $SSH_CREDS_PSW"'
+   }
+  }
+  stage('stage3'){
+   echo "hello ${params.PERSON}"
+   echo "Biography : ${params.BIOGRAPHY}"
+   echo "Toogle ${params.TOOGLE}"
+   echo "Choice ${params.CHOICE}"
+   echo "Password ${params.PASSWORD}"
+  }
+  stage('stage4'){
+   message "should we continue ?"
+   ok "yes, we can"
+   submitter "Kundu, Amit"
+   parameters{
+    string(name:'PERSON', defaultValue:'Mr Amit',description:'hello to ?')
+   }
+  }
+  stage('stage4'){
+   when {
+    branch 'production'
+   }
+   steps{
+    echo 'deploy'
+   }
+  }
+  stage('stage5'){
+   when{
+    branch 'production'
+    environemnt name:'DEPLOY_TO', value:'production'
+   }
+   steps{
+    echo 'Deploying'
+   }
+  }
+  stage('stage6'){
+   when{
+    allOf{
+    branch 'production'
+    environemnt name:'DEPLOY_TO', value:'production'
+    }
+    steps{
+     echo 'Deploying'
+    }
+   }
+  }
+  stage('stage7'){
+   when{
+    anyOf{
+    environemnt name:'DEPLOY_TO', value:'staging'
+    environemnt name:'DEPLOY_TO', value:'production'
+    }
+    steps{
+     echo 'Deploying'
+    }
+   }
+  }
+  stage('stage8'){
+   when{
+    beforeAgent true
+    branch 'production'
+    }
+    steps{
+     echo 'Deploying'
+    }
+   }
+   stage('non-sequential'){
+    agent{
+     label 'for-non-sequential-stage'
+    }
+    steps{
+     echo 'non-sequential-stage'
+    }
+   }
+   stage('sequential'){
+    agent{
+     label 'for-sequential-stage'
+    }
+    stages{
+     stage('in-sequential-1'){
+      steps{
+       echo 'sequential-1'
+      }
+     }
+     stage('in-sequential-2'){
+      steps{
+       echo 'sequential-2'
+      }
+     }
+     stage('parallel-in-sequential'){
+      parallel{
+       stage('parallel1'){
+        steps{
+         echo 'parallel-1'
+        }
+       }
+       stage('parallel2'){
+        steps{
+         echo 'parallel-2'
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+ post {
+  always {
+   echo 'i will always Run'
+  }
+  failure {
+   echo 'current run has failed'
+  }
+ }
+}
