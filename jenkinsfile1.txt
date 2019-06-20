@@ -1,0 +1,22 @@
+pipeline {
+ agent none
+ // ensures that an Executor will not be assigned unnecessarily. forces each stage section to contain its own agent section.
+ stages {
+  stage('build') {
+   agent {docker 'maven:3-alpine'}
+   // Execute the steps in this stage in a newly created container using this image.
+   steps {
+    echo 'hello, Maven'
+    sh 'mvn --version'
+   }
+  }
+  stage('test'){
+  agent { docker 'openjdk:8-jre' }
+  // Execute the steps in this stage in a newly created container using a different image from the previous stage.
+  steps {
+   echo 'Hello, JDK'
+   sh 'java -version'
+   }
+  }
+ }
+}
