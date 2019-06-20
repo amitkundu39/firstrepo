@@ -1,8 +1,5 @@
 pipeline{
  agent any
- options{
-  timestamps()
- }
  parameters{
   string(name:'PERSON',defaultValue:'Amit',description:'Name of the persion')
   text(name:'BIOGRAPHY',defaultValue:'he is a great guy and stuff',description:'about the person')
