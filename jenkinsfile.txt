@@ -12,7 +12,6 @@ pipeline{
   stage('example'){
    steps{
     echo 'stage1 step1'
-    input('do you want to continue ?')
    }
   }
   stage('stage3'){
