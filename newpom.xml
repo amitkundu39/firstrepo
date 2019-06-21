@@ -1,0 +1,55 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.tcs.myproject</groupId>
+  <artifactId>my-new-project</artifactId>
+  <packaging>jar</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <name>My new Project</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.tcs.ion</groupId>
+      <artifactId>eform.jar</artifactId>
+      <version>16.00.00.01-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.tcs.ion</groupId>
+      <artifactId>aadhar.jar</artifactId>
+      <version>12.00.00.01-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.tcs.ion</groupId>
+      <artifactId>mtop.jar</artifactId>
+      <version>[,11]</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.tcs.ion</groupId>
+      <artifactId>another.jar</artifactId>
+      <version>[4.1,]</version>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>com.tcs.ion</groupId>
+          <artifactId>dontneed.jar</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
